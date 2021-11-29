@@ -1,7 +1,6 @@
 import requests
 import pandas as pd
 import numpy as np
-pd.options.display.float_format = '{:,.2f}'.format
 
 
 def set_terms(trade_start, trade_end):
