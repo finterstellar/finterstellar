@@ -2,33 +2,38 @@ from . import util
 import pandas as pd
 import numpy as np
 import pandas_datareader.data as web
-pd.options.display.float_format = '{:,.2f}'.format
 
 
-def get_price(symbol, start_date=None, end_date=None):
+def get_price(symbol, start_date=None, end_date=None, decimal_duex=True):
     '''
     :param symbol: Symbol or ticker of equity by finance.yahoo.com
     :param start_date: The first date of period
     :param end_date: The last date of period
+    :param decimal_duex: Set false not to round up
     :return: Historical close prices
     '''
     symbol = util.str_to_list(symbol)
     end_date = pd.to_datetime(end_date).date() if end_date else pd.Timestamp.today().date()
     start_date = pd.to_datetime(start_date).date() if start_date else util.months_before(end_date, 12)
-    df = web.DataReader(symbol, 'yahoo', start=start_date, end=end_date)['Close'].round(2)
+    df = web.DataReader(symbol, 'yahoo', start=start_date, end=end_date)['Close']
+    if decimal_duex:
+        __decimal_formatter()
     return df[symbol]
 
 
-def get_ohlc(symbol, start_date=None, end_date=None):
+def get_ohlc(symbol, start_date=None, end_date=None, decimal_duex=True):
     '''
     :param symbol: Symbol or ticker of equity by finance.yahoo.com
     :param start_date: The first date of period
     :param end_date: The last date of period
+    :param decimal_duex: Set false not to round up
     :return: historical open, high, low, close prices and trade volume
     '''
     end_date = pd.to_datetime(end_date).date() if end_date else pd.Timestamp.today().date()
     start_date = pd.to_datetime(start_date).date() if start_date else util.months_before(end_date, 12)
-    df = web.DataReader(symbol, 'yahoo', start=start_date, end=end_date).round(2)
+    df = web.DataReader(symbol, 'yahoo', start=start_date, end=end_date)
+    if decimal_duex:
+        __decimal_formatter()
     return df
 
 
@@ -58,4 +63,9 @@ def __get_month_end_prices(symbols, start_date=None, end_date=None):
         prices = pd.concat([prices, tmp], axis=1)
         prices.index = pd.to_datetime(prices.index)
     return prices.loc[month_ends]
+
+
+def __decimal_formatter():
+    pd.options.display.float_format = '{:,.2f}'.format
+
 
