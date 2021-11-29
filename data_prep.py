@@ -16,8 +16,7 @@ def get_price(symbol, start_date=None, end_date=None, decimal_duex=True):
     end_date = pd.to_datetime(end_date).date() if end_date else pd.Timestamp.today().date()
     start_date = pd.to_datetime(start_date).date() if start_date else util.months_before(end_date, 12)
     df = web.DataReader(symbol, 'yahoo', start=start_date, end=end_date)['Close']
-    if decimal_duex:
-        __decimal_formatter(decimal_duex)
+    __decimal_formatter(decimal_duex)
     return df[symbol]
 
 
@@ -32,8 +31,7 @@ def get_ohlc(symbol, start_date=None, end_date=None, decimal_duex=True):
     end_date = pd.to_datetime(end_date).date() if end_date else pd.Timestamp.today().date()
     start_date = pd.to_datetime(start_date).date() if start_date else util.months_before(end_date, 12)
     df = web.DataReader(symbol, 'yahoo', start=start_date, end=end_date)
-    if decimal_duex:
-        __decimal_formatter(decimal_duex)
+    __decimal_formatter(decimal_duex)
     return df
 
 
