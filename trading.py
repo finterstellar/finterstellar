@@ -192,6 +192,6 @@ def performance(df, rf_rate=.01):
     print('Sharpe ratio: {:.2f}'.format(rst['sharpe_ratio']))
     print('MDD: {:.2%}'.format(rst['mdd']-1))
     print('Benchmark MDD: {:.2%}'.format(rst['bm_mdd']-1))
-    return
+    return rst
 
 
