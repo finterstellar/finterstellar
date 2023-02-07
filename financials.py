@@ -1,6 +1,8 @@
 import requests
 import pandas as pd
 import numpy as np
+import warnings
+warnings.filterwarnings('ignore')
 
 
 def set_terms(trade_start, trade_end):
@@ -29,7 +31,7 @@ def fn_consolidated(otp, symbol='', term='', vol=100000, study='N'):
     :return: The consolidate financial data of whole equities in designated term
     '''
     if term!='' or symbol!='':
-        url = 'http://finterstellar.com/api/consolidated?otp={}&symbol={}&term={}&vol={}&study={}'.format(otp, symbol, term, vol, study)
+        url = 'https://api.finterstellar.com/api/consolidated?otp={}&symbol={}&term={}&vol={}&study={}'.format(otp, symbol, term, vol, study)
         r = requests.get(url)
         print('\r{}...'.format(term), end='')
         if study=='Y':
@@ -53,7 +55,7 @@ def fn_single(otp, symbol='', window='T'):
     :param window: The way how to summarize financial data (Q:Quarterly, Y:Yearly, T:TTM)
     :return: The financial data of a company
     '''
-    url = 'http://finterstellar.com/api/single?otp={}&symbol={}&window={}'.format(otp, symbol, window)
+    url = 'https://api.finterstellar.com/api/single?otp={}&symbol={}&window={}'.format(otp, symbol, window)
     r = requests.get(url)
     try:
         df = pd.read_json(r.text, orient='index')
@@ -125,7 +127,7 @@ def combine_signal(*signals, how='and', n=None):
     how_dict = {'and':'inner', 'or':'outer'}
     signal = signals[0]
     for s in signals[1:]:
-        signal = signal.join(s, how=how_dict[how])
+        signal = signal.join(s, how=how_dict[how], rsuffix='_').copy()
     return signal[:n]
 
 
@@ -140,7 +142,7 @@ def combine_score(*signals, n=None):
     signal = signals[0].copy()
     signal['Score'] = signal['Score']/size
     for s in signals[1:]:
-        signal = signal.join(s['Score']/size, how='outer', rsuffix='_')
+        signal = signal.join(s['Score']/size, how='outer', rsuffix='_').copy()
         # signal['Score'] = round(signal['Score'].add(s['Score']/size, fill_value=0), 2)
     signal.drop(columns=[list(signal.columns)[0]], inplace=True)
     signal['Sum'] = signal.sum(axis=1)
@@ -177,8 +179,8 @@ def backtest(signal, data, m=3, cost=.001, rf_rate=.01):
     prices = pd.DataFrame()
     for t in position.index:
         # prices[t] = data[t][pm[m]][position.columns]
-        prices[t] = data[t][pm[m]].reindex(position.columns)
-    prices_filtered = prices.T
+        prices[t] = data[t][pm[m]].reindex(position.columns).copy()
+    prices_filtered = prices.T.copy()
 
     # 거래별 수익 계산
     position_cal = position.copy()

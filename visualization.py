@@ -1,4 +1,4 @@
-from . import data_prep, util
+from . import data_prep
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -36,7 +36,7 @@ def draw_chart(df, left=None, right=None, log=False):
     fig, ax1 = plt.subplots()
     x = df.index
     if left is not None:
-        left = util.str_to_list(left)
+        left = str_to_list(left)
         i = 6
         for c in left:
             ax1.plot(x, df[c], label=c, color='C'+str(i), alpha=1)
@@ -49,7 +49,7 @@ def draw_chart(df, left=None, right=None, log=False):
         ax1.axes.yaxis.set_visible(False)
     # secondary y
     if right is not None:
-        right = util.str_to_list(right)
+        right = str_to_list(right)
         ax2 = ax1.twinx()
         i = 1
         for c in right:
@@ -179,3 +179,17 @@ def draw_return(df, bm='^GSPC'):
     ax1.set_ylim(-100,100)
     plt.xticks(x_, x)
     plt.setp(ax1.xaxis.get_majorticklabels(), rotation=90)
+
+
+def str_to_list(s):
+    '''
+    Convert string to list
+    :param s: String or List
+    :return: List
+    '''
+    if type(s) == list:
+        cds = s
+    else:
+        cds = []
+        cds.append(s)
+    return cds
