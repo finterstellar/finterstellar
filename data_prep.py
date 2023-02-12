@@ -11,13 +11,8 @@ def get_price(symbol, start_date=None, end_date=None, decimal_duex=True):
     :param decimal_duex: Set false not to round up
     :return: Historical close prices
     '''
-    if isinstance(symbol, list):
-        symbol = symbol[0]
-    end_date = pd.to_datetime(end_date).date() if end_date else pd.Timestamp.today().date()
-    start_date = pd.to_datetime(start_date).date() if start_date else months_before(end_date, 12)
-    df = _get_daily_price(symbol, start=start_date, end=end_date)
+    df = get_ohlc(symbol, start_date=start_date, end_date=end_date, decimal_duex=decimal_duex)
     df.rename(columns={'Close':symbol}, inplace=True)
-    __decimal_formatter(decimal_duex)
     return df[[symbol]]
 
 
@@ -116,6 +111,7 @@ def _make_ohlc(raw):
         'Adj Close': adj_close,
     }
     data = pd.DataFrame(d, index=times)
+    data.index = pd.to_datetime(data.index)
     data = data.round(2)
     return data
 
