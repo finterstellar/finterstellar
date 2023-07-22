@@ -27,7 +27,7 @@ def get_ohlc(symbol, start_date=None, end_date=None, decimal_duex=True):
     if isinstance(symbol, list):
         symbol = symbol[0]
     end_date = pd.to_datetime(end_date).date() if end_date else pd.Timestamp.today().date()
-    start_date = pd.to_datetime(start_date).date() if start_date else months_before(end_date, 12)
+    start_date = pd.to_datetime(start_date).date() if start_date else (pd.Timestamp.today()-pd.DateOffset(months=1)).date()
     df = _get_daily_price(symbol, start=start_date, end=end_date)
     __decimal_formatter(decimal_duex)
     return df
@@ -116,35 +116,8 @@ def _make_ohlc(raw):
     return data
 
 
-def str_to_list(s):
-    '''
-    Convert string to list
-    :param s: String or List
-    :return: List
-    '''
-    if type(s) == list:
-        cds = s
-    else:
-        cds = []
-        cds.append(s)
-    return cds
-
-
-def months_before(date, n):
-    '''
-    Get date n months before given date
-    :param date: Base date
-    :param n: N months
-    :return: Date
-    '''
-    d = pd.to_datetime(date) - pd.DateOffset(months=n)
-    if d.weekday() > 4:
-        adj = d.weekday() - 4
-        d += pd.DateOffset(days=adj)
-    else:
-        d = d
-    return d.date()
-
-
 if __name__ == '__main__':
     df = get_price('MSFT')
+    print(df)
+
+
