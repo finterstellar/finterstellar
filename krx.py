@@ -16,7 +16,6 @@ headers = {
 
 # 종목마스터
 data = {
-    'menuId': 'MDC0201020201',
     'bld': 'dbms/MDC/STAT/standard/MDCSTAT01901',
     'locale': 'ko_KR',
     'mktId': 'ALL',
@@ -40,19 +39,9 @@ def historical_price(symbol='000660', start_date=None, end_date=None):
     print(start_date, end_date)
     data = {
         'bld': 'dbms/MDC/STAT/standard/MDCSTAT01701',
-        'locale': 'ko_KR',
-        'tboxisuCd_finder_stkisu0_0': '{}/{}'.format(stock['ISU_SRT_CD'].iloc[0], stock['ISU_ABBRV'].iloc[0]),
         'isuCd': '{}'.format(stock['ISU_CD'].iloc[0]),
-        'isuCd2': '{}'.format(stock['ISU_CD'].iloc[0]),
-        'codeNmisuCd_finder_stkisu0_0': '{}'.format(stock['ISU_ABBRV'].iloc[0]),
-        'param1isuCd_finder_stkisu0_0': 'ALL',
         'strtDd': start_date,
         'endDd': end_date,
-        'adjStkPrc_check': 'Y',
-        'adjStkPrc': 2,
-        'share': 1,
-        'money': 1,
-        'csvxls_isNo': 'false'
     }
     raw = requests.post(url, headers=headers, data=data)
     rst = raw.json()['output']
