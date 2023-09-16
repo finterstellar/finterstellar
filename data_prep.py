@@ -12,7 +12,7 @@ def get_price(symbol, start_date=None, end_date=None, decimal_duex=True):
     :return: Historical close prices
     '''
     df = get_ohlc(symbol, start_date=start_date, end_date=end_date, decimal_duex=decimal_duex)
-    df.rename(columns={'Close':symbol}, inplace=True)
+    df.rename(columns={'Adj Close':symbol}, inplace=True)
     return df[[symbol]]
 
 
@@ -44,17 +44,17 @@ def _get_multiple_prices(symbols, dates):
 
 
 def __get_month_ends(start_date=None, end_date=None):
-    checker = _get_daily_price('SPY', start=start_date, end=end_date)['Close']
+    checker = _get_daily_price('SPY', start=start_date, end=end_date)['Adj Close']
     month_ends = checker[checker.groupby([checker.index.year, checker.index.month]).apply(lambda s: np.max(s.index))].index
     return month_ends
 
 
 def __get_month_end_prices(symbols, start_date=None, end_date=None):
-    checker = _get_daily_price('SPY', start=start_date, end=end_date)['Close']
+    checker = _get_daily_price('SPY', start=start_date, end=end_date)['Adj Close']
     month_ends = checker[checker.groupby([checker.index.year, checker.index.month]).apply(lambda s: np.max(s.index))].index
     prices = pd.DataFrame()
     for s in symbols:
-        tmp = _get_daily_price(s, start=month_ends.min(), end=month_ends.max())['Close']
+        tmp = _get_daily_price(s, start=month_ends.min(), end=month_ends.max())['Adj Close']
         tmp.rename(s, inplace=True)
         prices = pd.concat([prices, tmp], axis=1)
         prices.index = pd.to_datetime(prices.index)
