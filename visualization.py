@@ -6,9 +6,9 @@ from matplotlib.ticker import ScalarFormatter, FixedLocator
 
 
 ScalarFormatter().set_scientific(False)
-font = 'NanumSquareRound, AppleGothic, Malgun Gothic, DejaVu Sans'
+# font = 'NanumSquareRound, AppleGothic, Malgun Gothic, DejaVu Sans'
 plt.style.use('bmh')
-plt.rcParams['font.family'] = font
+# plt.rcParams['font.family'] = font
 plt.rcParams['axes.unicode_minus'] = False
 plt.rcParams['axes.grid'] = True
 plt.rcParams['lines.linewidth'] = 1.5

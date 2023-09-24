@@ -319,4 +319,3 @@ def view_portfolio(data, signal, term=None):
     '''
     t = term if term else list(data.keys())[-1]
     return data[t].loc[signal[t]][['name','sector','industry','avg_volume']].sort_values(by=['sector','industry'])
-
